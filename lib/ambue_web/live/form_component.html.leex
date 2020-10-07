@@ -1,7 +1,9 @@
-<h1>Sign Up!</h1>
 <div id="signup">
-  <%= f = form_for @changeset, "#", phx_submit: "signup", phx_change: "validate" %>
-
+  <%= f = form_for @changeset, "#", 
+            phx_target: @myself,
+            phx_submit: "signup",
+            phx_change: "validate" %>
+  
     <div class="field">
       <%= text_input f, :name,
             placeholder: "Name", 
