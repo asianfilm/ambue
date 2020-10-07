@@ -1,8 +1,6 @@
 defmodule AmbueWeb.PageLive do
   use AmbueWeb, :live_view
 
-  require Logger
-
   alias Ambue.Accounts
   alias Ambue.Accounts.User
   alias Services.SessionCache
