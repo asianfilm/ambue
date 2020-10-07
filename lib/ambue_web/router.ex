@@ -8,6 +8,7 @@ defmodule AmbueWeb.Router do
     plug :put_root_layout, {AmbueWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :assign_session_id
   end
 
   pipeline :api do
@@ -20,18 +21,14 @@ defmodule AmbueWeb.Router do
     live "/", PageLive, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", AmbueWeb do
-  #   pipe_through :api
-  # end
+  defp assign_session_id(conn, _) do
+    if get_session(conn, :session_id) do
+      conn
+    else
+      conn |> put_session(:session_id, Ecto.UUID.generate())
+    end
+  end
 
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 

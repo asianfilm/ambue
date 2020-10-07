@@ -4,12 +4,17 @@ defmodule AmbueWeb.PageLive do
   alias AmbueWeb.FormComponent
 
   @impl true
-  def mount(_params, _session, socket), do: {:ok, socket}
+  def mount(_params, %{"session_id" => session_id}, socket) do
+    {:ok,
+     assign(socket,
+       session_id: session_id
+     )}
+  end
 
   @impl true
   def render(assigns),
     do: ~L"""
     <h1>Sign Up!</h1>
-    <%= live_component @socket, FormComponent, id: 1 %>
+    <%= live_component @socket, FormComponent, id: @session_id %>
     """
 end

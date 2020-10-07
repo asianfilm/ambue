@@ -7,6 +7,7 @@ defmodule AmbueWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_ambue_key",
+    max_age: 1000 * 60 * 60 * 24 * 7,
     signing_salt: "PAk5BhkN"
   ]
 
