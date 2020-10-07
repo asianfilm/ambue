@@ -1,15 +1,21 @@
 <h1>Sign Up!</h1>
 <div id="signup">
-  <%= f = form_for @changeset, "#", phx_submit: "signup" %>
+  <%= f = form_for @changeset, "#", phx_submit: "signup", phx_change: "validate" %>
 
     <div class="field">
-      <%= text_input f, :name, placeholder: "Name" %>
+      <%= text_input f, :name,
+            placeholder: "Name", 
+            autocomplete: "off", 
+            phx_debounce: "500" %>
       <%= error_tag f, :name %>
     </div>
 
     <div class="field">
-      <%= email_input f, :email, placeholder: "Email" %>
-      <%= error_tag f, :phone %>
+      <%= email_input f, :email,
+            placeholder: "Email",
+            autocomplete: "off", 
+            phx_debounce: "500" %>
+      <%= error_tag f, :email %>
     </div>
 
     <%= submit "Sign Up" %>

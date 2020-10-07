@@ -29,4 +29,16 @@ defmodule AmbueWeb.PageLive do
          )}
     end
   end
+
+  @impl true
+  def handle_event("validate", %{"user" => params}, socket) do
+    {:noreply,
+     assign(socket,
+       changeset:
+         %User{}
+         |> Accounts.change_user(params)
+         |> IO.inspect()
+         |> Map.put(:action, :insert)
+     )}
+  end
 end
