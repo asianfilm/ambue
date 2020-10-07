@@ -28,6 +28,8 @@ defmodule AmbueWeb.PageLive do
 
   @impl true
   def handle_event("signup", %{"user" => params}, socket) do
+    SessionCache.set(socket.assigns.session_id, params)
+
     case Accounts.create_user(params) do
       {:ok, _} ->
         {:noreply,
