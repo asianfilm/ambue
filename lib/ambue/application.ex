@@ -7,16 +7,11 @@ defmodule Ambue.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
       Ambue.Repo,
-      # Start the Telemetry supervisor
       AmbueWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: Ambue.PubSub},
-      # Start the Endpoint (http/https)
-      AmbueWeb.Endpoint
-      # Start a worker by calling: Ambue.Worker.start_link(arg)
-      # {Ambue.Worker, arg}
+      AmbueWeb.Endpoint,
+      Services.SessionCache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
