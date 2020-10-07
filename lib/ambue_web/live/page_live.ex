@@ -30,21 +30,21 @@ defmodule AmbueWeb.PageLive do
 
   @impl true
   def handle_event("signup", %{"user" => params}, socket) do
-    changeset =
-      case Accounts.create_user(params) do
-        {:ok, _} ->
-          Accounts.change_user(%User{})
+    case Accounts.create_user(params) do
+      {:ok, _} ->
+        {:noreply,
+         assign(socket,
+           changeset: Accounts.change_user(%User{}),
+           completed: true,
+           name: params["name"]
+         )}
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          changeset
-      end
-
-    {:noreply,
-     assign(socket,
-       changeset: changeset,
-       completed: true,
-       name: params["name"]
-     )}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply,
+         assign(socket,
+           changeset: changeset
+         )}
+    end
   end
 
   @impl true
