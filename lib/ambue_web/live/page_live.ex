@@ -10,33 +10,32 @@ defmodule AmbueWeb.PageLive do
     user =
       case SessionCache.get(session_id) do
         {:ok, saved_user} ->
-          %User{name: saved_user["name"], email: saved_user["email"]}
+          saved_user
 
         _ ->
-          %User{name: "", email: ""}
+          %User{}
       end
 
     {:ok,
      assign(socket,
        changeset: Accounts.change_user(user),
        completed: false,
-       email: user.email,
-       name: user.name,
+       user: user,
        session_id: session_id
      )}
   end
 
   @impl true
   def handle_event("signup", %{"user" => params}, socket) do
-    SessionCache.set(socket.assigns.session_id, params)
+    user = %User{name: params["name"], email: params["email"]}
+    SessionCache.set(socket.assigns.session_id, user)
 
     case Accounts.create_user(params) do
       {:ok, _} ->
         {:noreply,
          assign(socket,
-           changeset: Accounts.change_user(%User{}),
            completed: true,
-           name: params["name"]
+           user: user
          )}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -49,7 +48,8 @@ defmodule AmbueWeb.PageLive do
 
   @impl true
   def handle_event("validate", %{"user" => params}, socket) do
-    SessionCache.set(socket.assigns.session_id, params)
+    user = %User{name: params["name"], email: params["email"]}
+    SessionCache.set(socket.assigns.session_id, user)
 
     {:noreply,
      assign(socket,
@@ -57,8 +57,7 @@ defmodule AmbueWeb.PageLive do
          %User{}
          |> Accounts.change_user(params)
          |> Map.put(:action, :insert),
-       email: params["email"],
-       name: params["name"]
+       user: user
      )}
   end
 
@@ -67,7 +66,7 @@ defmodule AmbueWeb.PageLive do
     ~L"""
     <h1>AMBUE</h1>
     <%= if @completed do %>
-      <h3>Thanks, <strong><%= @name %>!</strong></h3>
+      <h3>Thanks, <strong><%= @user.name %>!</strong></h3>
     <% else %>
       <h3>Sign Up!</h3>
       <div id="signup">
@@ -77,7 +76,7 @@ defmodule AmbueWeb.PageLive do
 
         <div class="field">
           <%= text_input f, :name,
-                value: @name,
+                value: @user.name,
                 placeholder: "Name",
                 autocomplete: "off",
                 phx_debounce: "500" %>
@@ -86,7 +85,7 @@ defmodule AmbueWeb.PageLive do
 
         <div class="field">
           <%= email_input f, :email,
-                value: @email,
+                value: @user.email,
                 placeholder: "Email",
                 autocomplete: "off",
                 phx_debounce: "500" %>
