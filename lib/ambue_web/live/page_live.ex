@@ -27,7 +27,7 @@ defmodule AmbueWeb.PageLive do
 
   @impl true
   def handle_event("signup", %{"user" => params}, socket) do
-    user = %User{name: params["name"], email: params["email"]}
+    user = decode_user(params)
     SessionCache.set(socket.assigns.session_id, user)
 
     case Accounts.create_user(params) do
@@ -48,7 +48,7 @@ defmodule AmbueWeb.PageLive do
 
   @impl true
   def handle_event("validate", %{"user" => params}, socket) do
-    user = %User{name: params["name"], email: params["email"]}
+    user = decode_user(params)
     SessionCache.set(socket.assigns.session_id, user)
 
     {:noreply,
@@ -98,4 +98,10 @@ defmodule AmbueWeb.PageLive do
     <% end %>
     """
   end
+
+  defp decode_user(user),
+    do: %User{
+      name: user["name"],
+      email: user["email"]
+    }
 end
