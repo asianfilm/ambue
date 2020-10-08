@@ -10,7 +10,7 @@
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body onbeforeunload="">
-    <form method="get"><input></form>
+    <form method="get" style="visibility:hidden"><input></form>
     <section class="container">
       <%= @inner_content %>
     </section>
